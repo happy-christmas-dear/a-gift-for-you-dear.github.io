@@ -152,6 +152,216 @@
     filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.8));
     transition: all 0.4s ease;
 }
+    
+    /* Particle Canvas */
+#particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Candlelight effect */
+.candlelight {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at 50% 0%, 
+        rgba(255, 200, 100, 0.3) 0%, 
+        rgba(255, 150, 50, 0.15) 20%, 
+        transparent 50%);
+    pointer-events: none;
+    animation: flicker 3s infinite;
+    opacity: 0.6;
+}
+
+@keyframes flicker {
+    0%, 100% { opacity: 0.6; }
+    25% { opacity: 0.5; }
+    50% { opacity: 0.7; }
+    75% { opacity: 0.55; }
+}
+
+/* Hidden Message */
+.hidden-message {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(10, 5, 5, 0.95);
+    border: 3px solid #d4af37;
+    padding: 60px;
+    z-index: 1000;
+    max-width: 600px;
+    text-align: center;
+    animation: revealSecret 1s ease-out;
+}
+
+.hidden-message h2 {
+    font-family: 'Cinzel', serif;
+    color: #d4af37;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.hidden-message p {
+    font-family: 'EB Garamond', serif;
+    color: #a89968;
+    font-size: 1.3em;
+    line-height: 1.8;
+    font-style: italic;
+}
+
+.hidden-message button {
+    margin-top: 30px;
+    font-family: 'Cinzel', serif;
+    background: #8b0000;
+    color: #d4af37;
+    border: 2px solid #d4af37;
+    padding: 12px 30px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+@keyframes revealSecret {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Photo Gallery */
+.gallery-button {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cinzel', serif;
+    background: #8b0000;
+    color: #d4af37;
+    border: 2px solid #d4af37;
+    padding: 15px 35px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    z-index: 10;
+    display: none;  
+}
+
+.gallery-button.show {  
+    display: block;
+}
+
+.gallery-button:hover {
+    background: #a00000;
+    transform: translateY(-5px);
+}
+
+.gallery-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 2000;
+    overflow-y: auto;
+}
+
+.gallery-content {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 40px;
+}
+
+.gallery-title {
+    font-family: 'Cinzel', serif;
+    color: #d4af37;
+    font-size: 3em;
+    text-align: center;
+    margin-bottom: 50px;
+    letter-spacing: 3px;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #d4af37;
+    background: #1a0f0f;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.gallery-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.gallery-caption {
+    font-family: 'EB Garamond', serif;
+    color: #a89968;
+    font-size: 1.2em;
+    text-align: center;
+    font-style: italic;
+}
+
+.close-gallery {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    font-family: 'Cinzel', serif;
+    background: #8b0000;
+    color: #d4af37;
+    border: 2px solid #d4af37;
+    padding: 12px 30px;
+    font-size: 1.1em;
+    cursor: pointer;
+    z-index: 2001;
+}
+
+.read-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 12px;
+    height: 12px;
+    background: #d4af37;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.read-indicator.read {
+    opacity: 1;
+}
         
         .poem-page {
             display: none;
@@ -330,6 +540,7 @@
     <div id="poem1" class="poem-page">
         <button class="back-button" onclick="goBack()">Return</button>
         <div class="papyrus-content">
+            <div class="candlelight"></div>
             <h2 class="poem-title">Silence</h2>
             <p class="poem-text">
 Silently I hear,
@@ -353,6 +564,7 @@ Silently I watch.
     <div id="poem2" class="poem-page">
         <button class="back-button" onclick="goBack()">Return</button>
         <div class="papyrus-content">
+            <div class="candlelight"></div>
             <h2 class="poem-title">Proud</h2>
             <p class="poem-text">
 Near a river
@@ -376,6 +588,7 @@ And an arrow through his neck.
     <div id="poem3" class="poem-page">
         <button class="back-button" onclick="goBack()">Return</button>
         <div class="papyrus-content">
+            <div class="candlelight"></div>
             <h2 class="poem-title">The Moon</h2>
             <p class="poem-text">
 The sun looked down,
@@ -394,6 +607,7 @@ The sun stood pensive.
     <div id="poem4" class="poem-page">
     <button class="back-button" onclick="goBack()">Return</button>
     <div class="papyrus-content">
+        <div class="candlelight"></div>
         <h2 class="poem-title">Gris</h2>
         <p class="poem-text">
 In deep darkness
@@ -415,6 +629,7 @@ I can close my eyes.
 <div id="poem5" class="poem-page">
     <button class="back-button" onclick="goBack()">Return</button>
     <div class="papyrus-content">
+        <div class="candlelight"></div>
         <h2 class="poem-title">The End</h2>
         <p class="poem-text">
 At the end of the world
@@ -448,32 +663,165 @@ And so she sang.
     </div>
 </div>
 
-    <script>
-        
-        let usedMessages = [];
+ <!-- Hidden Message -->
+<div id="hiddenMessage" class="hidden-message">
+    <h2>Hiii</h2>
+    <p>
+        You are amazing, thanks for reading all the poems, and thanks for everything you did for me. 
+        I really hope you appreciated this gift, and I hope we'll forever stay together.
+    </p>
+    <button onclick="closeHiddenMessage()">Close</button>
+</div>
+
+<!-- Gallery Button -->
+<button class="gallery-button" onclick="openGallery()">Memories</button>
+
+<!-- Gallery Overlay -->
+<div id="galleryOverlay" class="gallery-overlay">
+    <button class="close-gallery" onclick="closeGallery()">Close</button>
+    <div class="gallery-content">
+        <h2 class="gallery-title">Gallery</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="memory1.jpg" alt="Memory 1">
+                <p class="gallery-caption">Us in Minecraft... hopefully again soon!</p>
+            </div>
+            <div class="gallery-item">
+                <img src="memory2.jpg" alt="Memory 2">
+                <p class="gallery-caption">Scary, amazing, devine...</p>
+            </div>
+            <div class="gallery-item">
+                <img src="memory3.jpg" alt="Memory 3">
+                <p class="gallery-caption">HELLO IT'S ME</p>
+            </div>
+            <div class="gallery-item">
+                <img src="memory4.jpg" alt="Memory 4">
+                <p class="gallery-caption">I'm sooo happy you also watch F1 :D</p>
+            </div>
+            <div class="gallery-item">
+                <img src="memory5.jpg" alt="Memory 5">
+                <p class="gallery-caption">And you have a very good artistic taste!!</p>
+            </div>
+        </div>
+    </div>
+</div>   
     
-        
-        document.querySelectorAll('.character').forEach(char => {
-            char.addEventListener('click', function() {
-                const charNum = this.getAttribute('data-character');
-                document.getElementById('mainPage').style.display = 'none';
-                document.getElementById('poem' + charNum).style.display = 'block';
-            });
+  <canvas id="particles"></canvas>  
+    
+<script>
+    // Particle System
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const particleCount = 50;
+
+    class Particle {
+        constructor() {
+            this.reset();
+        }
+
+        reset() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 3 + 1;
+            this.speedY = Math.random() * 0.5 + 0.2;
+            this.speedX = Math.random() * 0.5 - 0.25;
+            this.opacity = Math.random() * 0.5 + 0.3;
+        }
+
+        update() {
+            this.y -= this.speedY;
+            this.x += this.speedX;
+            
+            if (this.y < 0) {
+                this.y = canvas.height;
+                this.x = Math.random() * canvas.width;
+            }
+        }
+
+        draw() {
+            ctx.fillStyle = `rgba(212, 175, 55, ${this.opacity})`;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+    }
+
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(particle => {
+            particle.update();
+            particle.draw();
         });
-        document.querySelectorAll('.side-image').forEach(img => {
-    img.addEventListener('click', function() {
+        requestAnimationFrame(animateParticles);
+    }
+
+    animateParticles();
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+
+    // Track read poems
+    let readPoems = new Set();
+
+    // Character click handlers
+document.querySelectorAll('.character, .side-image').forEach(char => {
+    char.addEventListener('click', function() {
         const charNum = this.getAttribute('data-character');
+        readPoems.add(charNum);
         document.getElementById('mainPage').style.display = 'none';
         document.getElementById('poem' + charNum).style.display = 'block';
+        document.querySelector('.gallery-button').classList.remove('show');  // Hide button
+        canvas.style.display = 'none';  // Hide particles on poem pages
+        
+        // Check if all poems read
+        if (readPoems.size === 5) {
+            setTimeout(showHiddenMessage, 1000);
+        }
     });
 });
+
+function goBack() {
+    document.querySelectorAll('.poem-page').forEach(page => {
+        page.style.display = 'none';
+    });
+    document.getElementById('mainPage').style.display = 'flex';
+    document.querySelector('.gallery-button').classList.add('show');
+    canvas.style.display = 'block';  // Show particles on main page
+}
+
+    // Hidden Message
+    function showHiddenMessage() {
+        document.getElementById('hiddenMessage').style.display = 'block';
+    }
+
+    function closeHiddenMessage() {
+        document.getElementById('hiddenMessage').style.display = 'none';
+    }
+
+    // Gallery
+    function openGallery() {
+    document.getElementById('galleryOverlay').style.display = 'block';
+    document.querySelector('.gallery-button').classList.remove('show');
+}
+
+function closeGallery() {
+    document.getElementById('galleryOverlay').style.display = 'none';
+    document.querySelector('.gallery-button').classList.add('show');
+}
         
-        function goBack() {
-            document.querySelectorAll('.poem-page').forEach(page => {
-                page.style.display = 'none';
-            });
-            document.getElementById('mainPage').style.display = 'flex';
-        }
-    </script>
+// Show gallery button on main page initially
+document.querySelector('.gallery-button').classList.add('show');
+</script>
+
 </body>
 </html>
