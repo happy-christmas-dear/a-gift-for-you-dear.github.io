@@ -3,855 +3,1246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Christmas!</title>
+    <title>From James, to Suri</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=EB+Garamond:ital@0;1&display=swap');    
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'EB Garamond', serif;
-            background: linear-gradient(to bottom, #1a0f0f 0%, #0a0505 100%);
-            color: #d4af37;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        
-        .main-page {
+            background: #000;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            justify-content: center;
             min-height: 100vh;
-            padding: 40px 20px;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+        }
+
+        #gameContainer {
             position: relative;
+            width: 100vw;
+            height: 100vh;
         }
-        
-        .main-page::before {
-            content: '';
+
+        canvas {
+            display: block;
+        }
+
+        #memoryDialog {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(212, 175, 55, 0.03) 2px, rgba(212, 175, 55, 0.03) 4px),
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(212, 175, 55, 0.03) 2px, rgba(212, 175, 55, 0.03) 4px);
-            pointer-events: none;
-        }
-        
-        .title-container {
-    text-align: center;
-    margin-bottom: 50px;
-}
-
-.title {
-    font-family: 'Cinzel', serif;
-    font-size: 3.5em;
-    color: #d4af37;
-    text-align: center;
-    margin-bottom: 20px;  /* Changed from 60px */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-    letter-spacing: 4px;
-    border-bottom: 2px solid #8b0000;
-    padding-bottom: 20px;
-    animation: fadeIn 1.5s ease-in;
-}
-
-.subtitle {
-    font-family: 'EB Garamond', serif;
-    font-size: 1.5em;
-    color: #a89968;
-    font-style: italic;
-    letter-spacing: 2px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    animation: fadeIn 2s ease-in;
-}
-
-
-        .characters-container {
-            display: flex;
-            gap: 40px;
-            margin-bottom: 80px;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: flex-end;
-        }
-        
-        .character {
-            cursor: pointer;
-            transition: all 0.4s ease;
-            position: relative;
-            animation: slideUp 1s ease-out;
-            animation-fill-mode: both;
-        }
-        
-        .character:nth-child(1) { animation-delay: 0.2s; }
-        .character:nth-child(2) { animation-delay: 0.4s; }
-        .character:nth-child(3) { animation-delay: 0.6s; }
-        
-        .character img {
-            height: 250px;
-            width: auto;
-            transition: all 0.4s ease;
-        }
-        
-        .character:hover img {
-            transform: scale(1.1) translateY(-10px);
-            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.8));
-            
-        }
-        
-        .character:hover::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            width: 60%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #d4af37, transparent);
-            animation: glow 1.5s infinite;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            color: #d4af37;
+            padding: 30px;
+            border: 3px solid #8b7355;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 18px;
+            display: none;
+            max-width: 500px;
+            z-index: 200;
         }
-        
-.side-images {
-    position: fixed;
-    width: 100%;
+
+        #memoryDialog h2 {
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        #memoryDialog button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #8b7355;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+
+        #memoryDialog button:hover {
+            background: #a08968;
+        }
+
+        #interactPrompt {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #d4af37;
+            padding: 10px 20px;
+            border: 2px solid #8b7355;
+            border-radius: 5px;
+            font-size: 16px;
+            display: none;
+            z-index: 50;
+        }
+        #labyrinthGame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
     height: 100vh;
-    top: 0;
-    left: 0;
-    pointer-events: none;  
-    z-index: 1;
-}
-
-.side-image {
-    position: absolute;
-    height: 50vh;
-    width: auto;
-    bottom: -10vh;
-    cursor: pointer;
-    pointer-events: auto; 
-    transition: all 0.4s ease; 
-}
-
-.side-image.left {
-    left: 0vh;
-    cursor: pointer;
-}
-
-.side-image.right {
-    right: -10vh;
-    cursor: pointer;
-}
-.side-image:hover {
-    transform: scale(1.05);
-    filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.8));
-    transition: all 0.4s ease;
-}
-    
-    /* Particle Canvas */
-#particles {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* Candlelight effect */
-.candlelight {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(ellipse at 50% 0%, 
-        rgba(255, 200, 100, 0.3) 0%, 
-        rgba(255, 150, 50, 0.15) 20%, 
-        transparent 50%);
-    pointer-events: none;
-    animation: flicker 3s infinite;
-    opacity: 0.6;
-}
-
-@keyframes flicker {
-    0%, 100% { opacity: 0.6; }
-    25% { opacity: 0.5; }
-    50% { opacity: 0.7; }
-    75% { opacity: 0.55; }
-}
-
-/* Hidden Message */
-.hidden-message {
+    background: #000;
     display: none;
-    position: fixed;
+    z-index: 300;
+}
+
+#labyrinthCanvas {
+    display: block;
+    margin: 0 auto;
+    background: #000;
+}
+
+#labyrinthClose {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background: #8b7355;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    border-radius: 5px;
+    z-index: 301;
+}
+
+#labyrinthClose:hover {
+    background: #a08968;
+}
+
+#itemDialog {
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(10, 5, 5, 0.95);
-    border: 3px solid #d4af37;
-    padding: 60px;
-    z-index: 1000;
-    max-width: 600px;
-    text-align: center;
-    animation: revealSecret 1s ease-out;
-}
-
-.hidden-message h2 {
-    font-family: 'Cinzel', serif;
-    color: #d4af37;
-    font-size: 2.5em;
-    margin-bottom: 30px;
-    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-}
-
-.hidden-message p {
-    font-family: 'EB Garamond', serif;
-    color: #a89968;
-    font-size: 1.3em;
-    line-height: 1.8;
-    font-style: italic;
-}
-
-.hidden-message button {
-    margin-top: 30px;
-    font-family: 'Cinzel', serif;
-    background: #8b0000;
-    color: #d4af37;
-    border: 2px solid #d4af37;
-    padding: 12px 30px;
-    font-size: 1.1em;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-@keyframes revealSecret {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-    }
-}
-
-/* Photo Gallery */
-.gallery-button {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: 'Cinzel', serif;
-    background: #8b0000;
-    color: #d4af37;
-    border: 2px solid #d4af37;
-    padding: 15px 35px;
-    font-size: 1.1em;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    letter-spacing: 1px;
-    z-index: 10;
-    display: none;  
-}
-
-.gallery-button.show {  
-    display: block;
-}
-
-.gallery-button:hover {
-    background: #a00000;
-    transform: translateY(-5px);
-}
-
-.gallery-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
     background: rgba(0, 0, 0, 0.95);
-    z-index: 2000;
-    overflow-y: auto;
-}
-
-.gallery-content {
-    max-width: 1200px;
-    margin: 50px auto;
-    padding: 40px;
-}
-
-.gallery-title {
-    font-family: 'Cinzel', serif;
     color: #d4af37;
-    font-size: 3em;
+    padding: 30px;
+    border: 3px solid #8b7355;
+    border-radius: 10px;
     text-align: center;
-    margin-bottom: 50px;
-    letter-spacing: 3px;
+    display: none;
+    max-width: 600px;
+    z-index: 302;
 }
 
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    margin-bottom: 40px;
-}
-
-.gallery-item {
-    position: relative;
-    overflow: hidden;
-    border: 2px solid #d4af37;
-    background: #1a0f0f;
-    padding: 20px;
-    transition: all 0.3s ease;
-}
-
-.gallery-item:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
-}
-
-.gallery-item img {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
+#itemDialog h2 {
     margin-bottom: 15px;
+    color: #fff;
 }
 
-.gallery-caption {
-    font-family: 'EB Garamond', serif;
-    color: #a89968;
-    font-size: 1.2em;
-    text-align: center;
-    font-style: italic;
+#itemDialog img {
+    max-width: 400px;
+    max-height: 300px;
+    margin: 10px 0;
+    border: 2px solid #8b7355;
+    border-radius: 5px;
 }
 
-.close-gallery {
-    position: fixed;
-    top: 30px;
-    right: 30px;
-    font-family: 'Cinzel', serif;
-    background: #8b0000;
-    color: #d4af37;
-    border: 2px solid #d4af37;
-    padding: 12px 30px;
-    font-size: 1.1em;
+#itemDialog p {
+    margin: 15px 0;
+    font-size: 16px;
+}
+
+#itemDialog button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #8b7355;
+    color: #fff;
+    border: none;
     cursor: pointer;
-    z-index: 2001;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    border-radius: 5px;
 }
 
-.read-indicator {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 12px;
-    height: 12px;
-    background: #d4af37;
-    border-radius: 50%;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.read-indicator.read {
-    opacity: 1;
-}
-        
-        .poem-page {
-            display: none;
-            min-height: 100vh;
-            padding: 60px 40px;
-            background: linear-gradient(to bottom, #e8d7b8 0%, #c9b99a 100%);
-            position: relative;
-        }
-        
-        .poem-page::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%23c9b99a" width="100" height="100"/><path d="M0 0 L50 50 L0 100 L50 50 L100 100 L100 0 L50 50 L0 0" fill="none" stroke="%23a89968" stroke-width="0.5" opacity="0.3"/></svg>');
-            opacity: 0.3;
-            pointer-events: none;
-        }
-        
-        .papyrus-content {
-            max-width: 700px;
-            margin: 0 auto;
-            background: rgba(250, 245, 230, 0.9);
-            padding: 60px;
-            box-shadow: 
-                0 10px 40px rgba(0, 0, 0, 0.3),
-                inset 0 0 60px rgba(139, 0, 0, 0.05);
-            border: 1px solid #a89968;
-            position: relative;
-            border-radius: 2px;
-        }
-        
-        .papyrus-content::before,
-        .papyrus-content::after {
-            content: '';
-            position: absolute;
-            color: #8b0000;
-            font-size: 2em;
-        }
-        
-        .papyrus-content::before {
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        
-        .papyrus-content::after {
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        
-        .poem-title {
-            font-family: 'Cinzel', serif;
-            font-size: 2.5em;
-            color: #8b0000;
-            text-align: center;
-            margin-bottom: 40px;
-            letter-spacing: 3px;
-        }
-        
-        .poem-text {
-            font-size: 1.4em;
-            line-height: 2;
-            color: #2a2a2a;
-            text-align: center;
-            white-space: pre-line;
-            font-style: italic;
-        }
-        
-        .back-button {
-            position: fixed;
-            top: 30px;
-            left: 30px;
-            font-family: 'Cinzel', serif;
-            background: #8b0000;
-            color: #d4af37;
-            border: 2px solid #d4af37;
-            padding: 12px 30px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            letter-spacing: 1px;
-            z-index: 100;
-        }
-        
-        .back-button:hover {
-            background: #a00000;
-            transform: translateX(-5px);
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes glow {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
-        }
-        
-@media (max-width: 768px) {
-    .title {
-        font-size: 2em;
-    }
-    
-    .characters-container {
-        gap: 40px;
-    }
-    
-    .character img {
-        height: 180px;
-    }
-    
-    .papyrus-content {
-        padding: 40px 30px;
-    }
-    
-    .poem-title {
-        font-size: 1.8em;
-    }
-    
-    .poem-text {
-        font-size: 1.1em;
-    }
-    
-    .side-image {
-        height: 30vh;  /* Smaller on mobile */
-        bottom: 5vh;
-    }
-    
-    .side-image.left {
-        left: -5vh;
-    }
-    
-    .side-image.right {
-        right: -5vh;
-    }
-    
-    .gallery-button {
-        bottom: 20px;
-        padding: 12px 25px;
-        font-size: 1em;
-        z-index: 100;  /* Higher z-index to stay above images */
-    }
+#itemDialog button:hover {
+    background: #a08968;
 }
     </style>
 </head>
 <body>
-<div id="mainPage" class="main-page">
-    <div class="title-container">
-        <h1 class="title">Just a gift...</h1>
-        <p class="subtitle">Thanks for everything</p>
+<div id="gameContainer">
+    <div id="interactPrompt">Press [E] to interact</div>
+    <div id="memoryDialog">
+        <h2 id="memoryTitle"></h2>
+        <p id="memoryText"></p>
+        <button onclick="closeMemory()">Continue (E)</button>
     </div>
-    
-    <div class="characters-container">
-            <div class="character" data-character="1">
-                <img src="Kinich.png" alt="Character 1">
-            </div>
-            <div class="character" data-character="2">
-                <img src="horse.png" alt="Character 2">
-            </div>
-            <div class="character" data-character="3">
-                <img src="Arlecchino.png" alt="Character 3">
-            </div>
-        </div>
-        <div style="height: 200px;"></div>
-
-        <div class="side-images">
-            <img src="james.png" alt="James" class="side-image left" data-character="4">
-            <img src="suri.png" alt="Suri" class="side-image right" data-character="5">
-        </div>      
-    </div>
-
-    <div id="poem1" class="poem-page">
-        <button class="back-button" onclick="goBack()">Return</button>
-        <div class="papyrus-content">
-            <div class="candlelight"></div>
-            <h2 class="poem-title">Silence</h2>
-            <p class="poem-text">
-Silently I hear,
-As noisy screams 
-Fill my ears with words
-That I barely understand.
-
-Neither stands back,
-Both want truth,
-Both think are right,
-Neither truly is.
-
-Understanding now,
-As they fight
-To their death inside,
-Silently I watch.
-            </p>
-        </div>
-    </div>
-
-    <div id="poem2" class="poem-page">
-        <button class="back-button" onclick="goBack()">Return</button>
-        <div class="papyrus-content">
-            <div class="candlelight"></div>
-            <h2 class="poem-title">Proud</h2>
-            <p class="poem-text">
-Near a river
-An indomitable soul
-Drank secure, 
-As an arrow glowed behind.
-
-And suddenly
-All the birds flew away,
-As the water
-Got dyed in red.
-
-The soul stopped drinking,
-And looking back, 
-There was a man,
-And an arrow through his neck.
-            </p>
-        </div>
-    </div>
-
-    <div id="poem3" class="poem-page">
-        <button class="back-button" onclick="goBack()">Return</button>
-        <div class="papyrus-content">
-            <div class="candlelight"></div>
-            <h2 class="poem-title">The Moon</h2>
-            <p class="poem-text">
-The sun looked down,
-As a red figure rises,
-Proud and sure,
-Severe and high.
-
-And for a moment,
-As such moon glowed 
-With rising might,
-The sun stood pensive.
-            </p>
-        </div>
-    </div>
-
-    <div id="poem4" class="poem-page">
-    <button class="back-button" onclick="goBack()">Return</button>
-    <div class="papyrus-content">
-        <div class="candlelight"></div>
-        <h2 class="poem-title">Gris</h2>
-        <p class="poem-text">
-In deep darkness
-My heart cries alone,
-For it is helpless in such a world
-He wasn’t meant to be part of.
-
-And while I cough
-Weak and whining,
-A hand grabs my cloth,
-And with warmth, finally,
-
-I can close my eyes.
-
-        </p>
+<div id="labyrinthGame">
+    <button id="labyrinthClose" onclick="closeLabyrinth()">Close (ESC)</button>
+    <canvas id="labyrinthCanvas"></canvas>
+    <div id="itemDialog">
+        <h2 id="itemTitle"></h2>
+        <img id="itemImage" src="" alt="Item" style="display:none;">
+        <p id="itemText"></p>
+        <button onclick="closeItemDialog()">Continue (Space)</button>
     </div>
 </div>
-
-<div id="poem5" class="poem-page">
-    <button class="back-button" onclick="goBack()">Return</button>
-    <div class="papyrus-content">
-        <div class="candlelight"></div>
-        <h2 class="poem-title">The End</h2>
-        <p class="poem-text">
-At the end of the world
-There was an angel,
-In front of the everlasting abyss,
-With its little servant.
-
-They were the last who stood,
-And for the last night
-Before the time would end,
-A last order gave:
-
-“Bring me now
-The purest souls
-To sing tonight
-One last time”
-
-And back it got 
-A heart of stone
-Tough and heavy 
-As the servant said:
-
-“All the souls are gone
-In the depth of Tartarus;
-Only this survived, as so
-Strong the world forged her to be”
-
-And so she sang.
-
-        </p>
-    </div>
 </div>
 
- <!-- Hidden Message -->
-<div id="hiddenMessage" class="hidden-message">
-    <h2>Hiii</h2>
-    <p>
-        You are amazing, thanks for reading all the poems, and thanks for everything you did for me. 
-        I really hope you appreciated this gift, and I hope we'll forever stay together.
-    </p>
-    <button onclick="closeHiddenMessage()">Close</button>
-</div>
-
-<!-- Gallery Button -->
-<button class="gallery-button" onclick="openGallery()">Memories</button>
-
-<!-- Gallery Overlay -->
-<div id="galleryOverlay" class="gallery-overlay">
-    <button class="close-gallery" onclick="closeGallery()">Close</button>
-    <div class="gallery-content">
-        <h2 class="gallery-title">Gallery</h2>
-        <div class="gallery-grid">
-            <div class="gallery-item">
-                <img src="memory1.jpg" alt="Memory 1">
-                <p class="gallery-caption">Us in Minecraft... hopefully again soon!</p>
-            </div>
-            <div class="gallery-item">
-                <img src="memory2.jpg" alt="Memory 2">
-                <p class="gallery-caption">Scary, amazing, devine...</p>
-            </div>
-            <div class="gallery-item">
-                <img src="memory3.jpg" alt="Memory 3">
-                <p class="gallery-caption">HELLO IT'S ME</p>
-            </div>
-            <div class="gallery-item">
-                <img src="memory4.jpg" alt="Memory 4">
-                <p class="gallery-caption">I'm sooo happy you also watch F1 :D</p>
-            </div>
-            <div class="gallery-item">
-                <img src="memory5.jpg" alt="Memory 5">
-                <p class="gallery-caption">And you have a very good artistic taste!!</p>
-            </div>
-            <div class="gallery-item">
-                <img src="memory6.jpg" alt="Memory 6">
-                <p class="gallery-caption">AND YOU ARE AMAZING!</p>
-            </div>
-        </div>
-    </div>
-</div>   
-    
-  <canvas id="particles"></canvas>  
-    
-<script>
-    // Particle System
-    const canvas = document.getElementById('particles');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const particles = [];
-    const particleCount = 50;
-
-    class Particle {
-        constructor() {
-            this.reset();
-        }
-
-        reset() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 3 + 1;
-            this.speedY = Math.random() * 0.5 + 0.2;
-            this.speedX = Math.random() * 0.5 - 0.25;
-            this.opacity = Math.random() * 0.5 + 0.3;
-        }
-
-        update() {
-            this.y -= this.speedY;
-            this.x += this.speedX;
-            
-            if (this.y < 0) {
-                this.y = canvas.height;
-                this.x = Math.random() * canvas.width;
-            }
-        }
-
-        draw() {
-            ctx.fillStyle = `rgba(212, 175, 55, ${this.opacity})`;
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
-        }
-    }
-
-    for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle());
-    }
-
-    function animateParticles() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(particle => {
-            particle.update();
-            particle.draw();
-        });
-        requestAnimationFrame(animateParticles);
-    }
-
-    animateParticles();
-
-    window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    });
-
-// Track read poems and if hidden message was shown
-let readPoems = new Set();
-let hiddenMessageShown = false;  
-
-// Character click handlers
-document.querySelectorAll('.character, .side-image').forEach(char => {
-    char.addEventListener('click', function() {
-        const charNum = this.getAttribute('data-character');
-        readPoems.add(charNum);
-        document.getElementById('mainPage').style.display = 'none';
-        document.getElementById('poem' + charNum).style.display = 'block';
-        document.querySelector('.gallery-button').classList.remove('show');
-        canvas.style.display = 'none';
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
         
-        // Check if all poems read and message not shown yet
-        if (readPoems.size === 5 && !hiddenMessageShown) {
-            hiddenMessageShown = true;  // Mark as shown
-            setTimeout(showHiddenMessage, 1000);
-        }
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x000000);
+        scene.fog = new THREE.Fog(0x000000, 1, 50);
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 1.6, 5);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.getElementById('gameContainer').appendChild(renderer.domElement);
+
+        // Player controls
+        const moveSpeed = 0.4;
+        const keys = {};
+        let mouseX = 0;
+        let mouseY = 0;
+        let isPointerLocked = false;
+
+        const memoryData = [
+            { position: [0, -10], name: "6/10/2024", content: "You asked me to join my Genshin world when we didn't know each other at all... remember how I thought you were a boy at the start? Because you made fun of me that I had no social life :D" },
+            { position: [0, -20], name: "Minecraft hangout", content: "This was surprisingly early when we met, and I had fun playing survival (and then creative!) with you, although you made fun of my ugly building abilities..." },
+            { position: [0, -30], name: "Your beautiful builds", content: "I wish I could be as creative and good in those things as you <3 This looks beautiful" },
+            { position: [0, -40], name: "Sso", content: "Your photos from sso are so cute and I really love them... this is my favourite!" },
+            { position: [0, -50], name: "...and sso again", content: "And you character is so fucking beautiful!" },
+        ];
+
+        const textMessages = [
+            { position: [0, -60], text: "Thank you for being here\nwith me dear" },
+            { position: [0, -70], text: "Every moment with you\nhas been special <3" },
+            { position: [0, -80], text: "We sent each other \nover 120k messages!" },
+            { position: [0, -90], text: "Here are a few poems \nI wrote for you!" },
+        ];
+
+const poemPapers = [
+    { position: [0, -100], poem: "In deep darkness\nMy heart cries alone,\nFor it is helpless in such a world\nHe wasn’t meant to be part of.\nAnd while I cough\nWeak and whining,\nA hand grabs my cloth,\nAnd with warmth, finally,\nI can close my eyes." },
+    { position: [0, -110], poem: "Silently I hear,\nAs noisy screams\nFill my ears with words\nThat I barely understand.\nNeither stands back,\nBoth want truth,\nBoth think are right,\nNeither truly is.\nUnderstanding now,\nAs they fight\nTo their death inside,\nSilently I watch." },
+    { position: [0, -120], poem: "Near a river\nAn indomitable soul\nDrank secure,\nAs an arrow glowed behind.\nAnd suddenly\nAll the birds flew away,\nAs the water\nGot dyed in red.\nThe soul stopped drinking,\nAnd looking back,\nThere was a man,\nAnd an arrow through his neck." },
+    { position: [0, -130], poem: "The sun looked down,\nAs a red figure rises,\nProud and sure,\nSevere and high.\nAnd for a moment,\nAs such moon glowed\nWith rising might,\nThe sun stood pensive." },
+    { position: [0, -140], poem: "At the end of the world\nThere was an angel,\nIn front of the everlasting abyss,\nWith its little servant.\nThey were the last who stood,\nAnd for the last night\nBefore the time would end,\nA last order gave:\n\“Bring me now\nThe purest souls\nTo sing tonight\nOne last time\”" },
+    { position: [0, -150], poem: "And back it got\nA heart of stone\nTough and heavy\nAs the servant said:\n\"All the souls are gone\nIn the depth of Tartarus;\nOnly this survived, as so\nStrong the world forged her to be\"\nAnd so she sang." },
+];
+
+let poemPaperObjects = [];
+const finalImage = { position: [0, -160], name: "With love", content: "Thanks, for everything." };
+let finalImageObject = null;
+
+const finalMessage = { position: [0, -170], text: "From James\nTo Suri" };
+let finalMessageObject = null;
+let textMessageObjects = [];
+
+        let memoryObjects = [];
+        let currentMemory = null;
+        let floatingTexts = [];
+let isLabyrinthOpen = false;
+let labyrinthCanvas, labyrinthCtx;
+let playerPos = { x: 1, y: 1 };
+let labyrinthKeys = {};
+const cellSize = 40;
+let lastMoveTime = 0;
+const moveDelay = 150; // milliseconds between moves
+        // Texture loader
+        const textureLoader = new THREE.TextureLoader();
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.2);
+        scene.add(ambientLight);
+
+        // Player's torch light
+        const pointLight = new THREE.PointLight(0xffcc88, 2, 15);
+        pointLight.position.copy(camera.position);
+        pointLight.castShadow = true;
+        pointLight.shadow.mapSize.width = 1024;
+        pointLight.shadow.mapSize.height = 1024;
+        scene.add(pointLight);
+
+function createCorridor() {
+    const corridorLength = 400;
+    const corridorWidth = 6;
+    const wallHeight = 4;
+
+    // Load textures (will use default colors if textures don't load)
+    const floorTexture = textureLoader.load(
+        'assets/floor_texture.png',
+        undefined,
+        undefined,
+        () => console.log('Floor texture not found, using default color')
+    );
+    floorTexture.wrapS = THREE.RepeatWrapping;
+    floorTexture.wrapT = THREE.RepeatWrapping;
+    floorTexture.repeat.set(6, 400);
+
+    const wallTexture = textureLoader.load(
+        'assets/wall_texture.png',
+        undefined,
+        undefined,
+        () => console.log('Wall texture not found, using default color')
+    );
+    wallTexture.wrapS = THREE.RepeatWrapping;
+    wallTexture.wrapT = THREE.RepeatWrapping;
+    wallTexture.repeat.set(100, 1);
+
+    const ceilingTexture = textureLoader.load(
+        'assets/ceiling_texture.png',
+        undefined,
+        undefined,
+        () => console.log('Ceiling texture not found, using default color')
+    );
+    ceilingTexture.wrapS = THREE.RepeatWrapping;
+    ceilingTexture.wrapT = THREE.RepeatWrapping;
+    ceilingTexture.repeat.set(6, 400);
+
+    // Load baseboard texture
+    const baseboardTexture = textureLoader.load(
+        'assets/baseboard_texture.png',
+        undefined,
+        undefined,
+        () => console.log('Baseboard texture not found, using default color')
+    );
+    baseboardTexture.wrapS = THREE.RepeatWrapping;
+    baseboardTexture.wrapT = THREE.RepeatWrapping;
+    baseboardTexture.repeat.set(100, 1); // Adjust repeat values as needed
+
+    // Floor
+    const floorGeometry = new THREE.PlaneGeometry(corridorWidth, corridorLength);
+    const floorMaterial = new THREE.MeshStandardMaterial({ 
+        map: floorTexture,
+        color: 0x2a2438,
+        roughness: 0.8,
+        metalness: 0.2
     });
+    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.z = -corridorLength / 2 + 90;
+    floor.receiveShadow = true;
+    scene.add(floor);
+
+    // Ceiling
+    const ceilingMaterial = new THREE.MeshStandardMaterial({ 
+        map: ceilingTexture,
+        color: 0x2a2438,
+        roughness: 0.8,
+        metalness: 0.2
+    });
+    const ceiling = new THREE.Mesh(floorGeometry, ceilingMaterial);
+    ceiling.rotation.x = Math.PI / 2;
+    ceiling.position.y = wallHeight;
+    ceiling.position.z = -corridorLength / 2 + 90;
+    ceiling.receiveShadow = true;
+    scene.add(ceiling);
+
+    // Left wall
+    const wallGeometry = new THREE.PlaneGeometry(corridorLength, wallHeight);
+    const wallMaterial = new THREE.MeshStandardMaterial({ 
+        map: wallTexture,
+        color: 0x3d3450,
+        roughness: 0.9,
+        metalness: 0.1
+    });
+    const leftWall = new THREE.Mesh(wallGeometry, wallMaterial);
+    leftWall.rotation.y = Math.PI / 2;
+    leftWall.position.x = -corridorWidth / 2;
+    leftWall.position.y = wallHeight / 2;
+    leftWall.position.z = -corridorLength / 2 + 90;
+    leftWall.receiveShadow = true;
+    leftWall.renderOrder = 0;
+    scene.add(leftWall);
+
+    // Right wall
+    const rightWall = new THREE.Mesh(wallGeometry, wallMaterial.clone());
+    rightWall.rotation.y = -Math.PI / 2;
+    rightWall.position.x = corridorWidth / 2;
+    rightWall.position.y = wallHeight / 2;
+    rightWall.position.z = -corridorLength / 2 + 90;
+    rightWall.receiveShadow = true;
+    rightWall.renderOrder = 0;
+    scene.add(rightWall);
+
+    // Baseboard setup
+    const baseboardHeight = 0.02; // Adjust this value to change height
+    const baseboardGeometry = new THREE.PlaneGeometry(corridorLength, baseboardHeight);
+    const baseboardMaterial = new THREE.MeshStandardMaterial({ 
+        map: baseboardTexture,
+        color: 0x6e6858,
+        roughness: 0.7,
+        metalness: 0.3
+    });
+
+    // Left wall baseboard
+    const leftBaseboard = new THREE.Mesh(baseboardGeometry, baseboardMaterial);
+    leftBaseboard.rotation.y = Math.PI / 2;
+    leftBaseboard.position.x = -corridorWidth / 2 + 0.001;
+    leftBaseboard.position.y = baseboardHeight / 2;
+    leftBaseboard.position.z = -corridorLength / 2 + 90;
+    leftBaseboard.receiveShadow = true;
+    leftBaseboard.renderOrder = 1;
+    scene.add(leftBaseboard);
+
+    // Right wall baseboard
+    const rightBaseboard = new THREE.Mesh(baseboardGeometry, baseboardMaterial.clone());
+    rightBaseboard.rotation.y = -Math.PI / 2;
+    rightBaseboard.position.x = corridorWidth / 2 - 0.001;
+    rightBaseboard.position.y = baseboardHeight / 2;
+    rightBaseboard.position.z = -corridorLength / 2 + 90;
+    rightBaseboard.receiveShadow = true;
+    rightBaseboard.renderOrder = 1;
+    scene.add(rightBaseboard);
+    // Top baseboard (crown molding) setup
+const topBaseboardHeight = 0.055; // Adjust this value to change height
+const topBaseboardGeometry = new THREE.PlaneGeometry(corridorLength, topBaseboardHeight);
+const topBaseboardMaterial = new THREE.MeshStandardMaterial({ 
+    map: baseboardTexture,
+    color: 0x6e6858,
+    roughness: 0.7,
+    metalness: 0.3
 });
 
-function goBack() {
-    document.querySelectorAll('.poem-page').forEach(page => {
-        page.style.display = 'none';
-    });
-    document.getElementById('mainPage').style.display = 'flex';
-    document.querySelector('.gallery-button').classList.add('show');
-    canvas.style.display = 'block';  // Show particles on main page
+// Left wall top baseboard
+const leftTopBaseboard = new THREE.Mesh(topBaseboardGeometry, topBaseboardMaterial);
+leftTopBaseboard.rotation.y = Math.PI / 2;
+leftTopBaseboard.position.x = -corridorWidth / 2 + 0.01;
+leftTopBaseboard.position.y = wallHeight - (topBaseboardHeight / 2); // Position at top of wall
+leftTopBaseboard.position.z = -corridorLength / 2 + 90;
+leftTopBaseboard.receiveShadow = true;
+leftTopBaseboard.renderOrder = 1;
+scene.add(leftTopBaseboard);
+
+// Right wall top baseboard
+const rightTopBaseboard = new THREE.Mesh(topBaseboardGeometry, topBaseboardMaterial.clone());
+rightTopBaseboard.rotation.y = -Math.PI / 2;
+rightTopBaseboard.position.x = corridorWidth / 2 - 0.01;
+rightTopBaseboard.position.y = wallHeight - (topBaseboardHeight / 2); // Position at top of wall
+rightTopBaseboard.position.z = -corridorLength / 2 + 90;
+rightTopBaseboard.receiveShadow = true;
+rightTopBaseboard.renderOrder = 1;
+scene.add(rightTopBaseboard);
 }
 
-    // Hidden Message
-    function showHiddenMessage() {
-        document.getElementById('hiddenMessage').style.display = 'block';
-    }
-
-    function closeHiddenMessage() {
-        document.getElementById('hiddenMessage').style.display = 'none';
-    }
-
-    // Gallery
-    function openGallery() {
-    document.getElementById('galleryOverlay').style.display = 'block';
-    document.querySelector('.gallery-button').classList.remove('show');
-}
-
-function closeGallery() {
-    document.getElementById('galleryOverlay').style.display = 'none';
-    document.querySelector('.gallery-button').classList.add('show');
-}
+        // Create floating 3D text
+        function createFloatingText(text, position, fontSize = 0.5) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = 512;
+            canvas.height = 256;
+            
+            context.fillStyle = 'rgba(0, 0, 0, 0.8)';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            
+            context.strokeStyle = '#8b7355';
+            context.lineWidth = 4;
+            context.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+            
+            context.fillStyle = '#d4af37';
+            context.font = 'bold 28px Courier New';
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            
+            // Split text by newlines and draw each line
+            const lines = text.split('\n');
+            const lineHeight = 40;
+            const startY = (canvas.height / 2) - ((lines.length - 1) * lineHeight / 2);
+            
+            lines.forEach((line, index) => {
+                context.fillText(line, canvas.width / 2, startY + (index * lineHeight));
+            });
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            const material = new THREE.MeshBasicMaterial({ 
+                map: texture, 
+                transparent: true,
+                side: THREE.DoubleSide
+            });
+            const geometry = new THREE.PlaneGeometry(2.5, 1.25);
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.position.set(position[0], position[1], position[2]);
+            mesh.userData.isFloatingText = true;
+            mesh.userData.startZ = position[2];
+            
+            scene.add(mesh);
+            floatingTexts.push(mesh);
+        }
+// Create memory images on floor
+function createMemoryObjects() {
+    memoryData.forEach((data, index) => {
+        const geometry = new THREE.PlaneGeometry(3, 3); // Temporary size
+        const memoryMaterial = new THREE.MeshBasicMaterial({ 
+            transparent: true,
+            side: THREE.DoubleSide,
+            opacity: 0
+        });
         
-// Show gallery button on main page initially
-document.querySelector('.gallery-button').classList.add('show');
-</script>
+        const plane = new THREE.Mesh(geometry, memoryMaterial);
+        plane.position.set(data.position[0], 2, data.position[1]);
+        plane.userData = { 
+            isMemory: true, 
+            name: data.name, 
+            content: data.content,
+            index: index
+        };
+        
+        // Load memory image texture
+        const memoryTexture = textureLoader.load(
+            `assets/memory${index + 1}.png`,
+            (texture) => {
+                // Success callback - resize based on actual image dimensions
+                const img = texture.image;
+                const aspectRatio = img.width / img.height;
+                const baseHeight = 3; // Bigger base size
+                const width = baseHeight * aspectRatio;
+                
+                plane.geometry.dispose();
+                plane.geometry = new THREE.PlaneGeometry(width, baseHeight);
+                memoryMaterial.map = texture;
+                memoryMaterial.needsUpdate = true;
+            },
+            undefined,
+            () => {
+                console.log(`Memory image ${index + 1} not found, using default`);
+                // Create default golden circle if image fails to load
+                const canvas = document.createElement('canvas');
+                canvas.width = 128;
+                canvas.height = 128;
+                const ctx = canvas.getContext('2d');
+                const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+                gradient.addColorStop(0, '#fff');
+                gradient.addColorStop(0.5, '#d4af37');
+                gradient.addColorStop(1, '#8b7355');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, 128, 128);
+                memoryMaterial.map = new THREE.CanvasTexture(canvas);
+                memoryMaterial.needsUpdate = true;
+            }
+        );
+        
+        scene.add(plane);
+        memoryObjects.push(plane);
+    });
+}
 
+// Create text message objects floating in air
+function createTextMessageObjects() {
+    textMessages.forEach((data, index) => {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = 512;
+        canvas.height = 256;
+        
+        context.fillStyle = 'rgba(0, 0, 0, 0.9)';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        
+        context.strokeStyle = '#8b7355';
+        context.lineWidth = 4;
+        context.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+        
+        context.fillStyle = '#d4af37';
+        context.font = 'bold 32px Courier New';
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        
+        // Split text by newlines and draw each line
+        const lines = data.text.split('\n');
+        const lineHeight = 45;
+        const startY = (canvas.height / 2) - ((lines.length - 1) * lineHeight / 2);
+        
+        lines.forEach((line, i) => {
+            context.fillText(line, canvas.width / 2, startY + (i * lineHeight));
+        });
+        
+        const texture = new THREE.CanvasTexture(canvas);
+        const material = new THREE.MeshBasicMaterial({ 
+            map: texture,
+            transparent: true,
+            side: THREE.DoubleSide,
+            opacity: 0
+        });
+        
+        const geometry = new THREE.PlaneGeometry(4, 2);
+        const plane = new THREE.Mesh(geometry, material);
+        // No rotation - keeps it vertical/floating
+        plane.position.set(data.position[0], 2, data.position[1]); // y=2 makes it float at eye level
+        plane.userData = { 
+            isTextMessage: true,
+            index: index
+        };
+        
+        scene.add(plane);
+        textMessageObjects.push(plane);
+    });
+}
+
+// Create floating poem papers
+function createPoemPapers() {
+    poemPapers.forEach((data, index) => {
+        const lines = data.poem.split('\n');
+        const lineCount = lines.length;
+        
+        // Adjust canvas height and font size based on line count
+        let canvasHeight = 1000;
+        let fontSize = 28;
+        let lineHeight = 45;
+        
+        if (lineCount > 15) {
+            // For very long poems
+            canvasHeight = 1400;
+            fontSize = 24;
+            lineHeight = 38;
+        } else if (lineCount > 10) {
+            // For medium-long poems
+            canvasHeight = 1200;
+            fontSize = 26;
+            lineHeight = 42;
+        }
+        
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = 800;
+        canvas.height = canvasHeight;
+        
+        // Paper-like background color
+        context.fillStyle = '#f4e8d0';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Add slight paper texture with lines
+        context.strokeStyle = 'rgba(200, 180, 150, 0.3)';
+        context.lineWidth = 1;
+        for (let i = 80; i < canvas.height - 80; i += lineHeight) {
+            context.beginPath();
+            context.moveTo(80, i);
+            context.lineTo(canvas.width - 80, i);
+            context.stroke();
+        }
+        
+        // Paper border
+        context.strokeStyle = '#d4c4a8';
+        context.lineWidth = 3;
+        context.strokeRect(5, 5, canvas.width - 10, canvas.height - 10);
+        
+        // Poem text - smaller and darker for readability on paper
+        context.fillStyle = '#2a2a2a';
+        context.font = `${fontSize}px Courier New`;
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        
+        // Draw each line
+        const startY = (canvas.height / 2) - ((lines.length - 1) * lineHeight / 2);
+        
+        lines.forEach((line, i) => {
+            context.fillText(line, canvas.width / 2, startY + (i * lineHeight));
+        });
+        
+        const texture = new THREE.CanvasTexture(canvas);
+        const material = new THREE.MeshBasicMaterial({ 
+            map: texture,
+            transparent: true,
+            side: THREE.DoubleSide,
+            opacity: 0
+        });
+        
+        // Adjust geometry height based on canvas height
+        const paperWidth = 6;
+        const paperHeight = (canvasHeight / 1000) * 7.5; // Scale proportionally
+        const geometry = new THREE.PlaneGeometry(paperWidth, paperHeight);
+        const plane = new THREE.Mesh(geometry, material);
+        plane.position.set(data.position[0], 2, data.position[1]);
+        plane.userData = { 
+            isPoemPaper: true,
+            index: index
+        };
+        
+        scene.add(plane);
+        poemPaperObjects.push(plane);
+    });
+}
+
+// Create final floating image
+function createFinalImage() {
+    const geometry = new THREE.PlaneGeometry(3, 3);
+    const memoryMaterial = new THREE.MeshBasicMaterial({ 
+        transparent: true,
+        side: THREE.DoubleSide,
+        opacity: 0
+    });
+    
+    const plane = new THREE.Mesh(geometry, memoryMaterial);
+    plane.position.set(finalImage.position[0], 2, finalImage.position[1]);
+    plane.userData = { 
+        isMemory: true, 
+        name: finalImage.name, 
+        content: finalImage.content,
+        index: 'final'
+    };
+    
+    const memoryTexture = textureLoader.load(
+        'assets/final.png',
+        (texture) => {
+            const img = texture.image;
+            const aspectRatio = img.width / img.height;
+            const baseHeight = 3;
+            const width = baseHeight * aspectRatio;
+            
+            plane.geometry.dispose();
+            plane.geometry = new THREE.PlaneGeometry(width, baseHeight);
+            memoryMaterial.map = texture;
+            memoryMaterial.needsUpdate = true;
+        },
+        undefined,
+        () => {
+            console.log('Final image not found, using default');
+            const canvas = document.createElement('canvas');
+            canvas.width = 128;
+            canvas.height = 128;
+            const ctx = canvas.getContext('2d');
+            const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+            gradient.addColorStop(0, '#fff');
+            gradient.addColorStop(0.5, '#d4af37');
+            gradient.addColorStop(1, '#8b7355');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 128, 128);
+            memoryMaterial.map = new THREE.CanvasTexture(canvas);
+            memoryMaterial.needsUpdate = true;
+        }
+    );
+    
+    scene.add(plane);
+    finalImageObject = plane;
+}
+
+// Create final message
+function createFinalMessage() {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = 512;
+    canvas.height = 256;
+    
+    context.fillStyle = 'rgba(0, 0, 0, 0.9)';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    
+    context.strokeStyle = '#8b7355';
+    context.lineWidth = 4;
+    context.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+    
+    context.fillStyle = '#d4af37';
+    context.font = 'bold 32px Courier New';
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+    
+    const lines = finalMessage.text.split('\n');
+    const lineHeight = 45;
+    const startY = (canvas.height / 2) - ((lines.length - 1) * lineHeight / 2);
+    
+    lines.forEach((line, i) => {
+        context.fillText(line, canvas.width / 2, startY + (i * lineHeight));
+    });
+    
+    const texture = new THREE.CanvasTexture(canvas);
+    const material = new THREE.MeshBasicMaterial({ 
+        map: texture,
+        transparent: true,
+        side: THREE.DoubleSide,
+        opacity: 0
+    });
+    
+    const geometry = new THREE.PlaneGeometry(4, 2);
+    const plane = new THREE.Mesh(geometry, material);
+    plane.position.set(finalMessage.position[0], 2, finalMessage.position[1]);
+    plane.userData = { 
+        isFinalMessage: true
+    };
+    
+    scene.add(plane);
+    finalMessageObject = plane;
+}
+
+// Labyrinth maze: 0 = wall, 1 = path, 2 = item, 3 = end
+const labyrinthMaze = [
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,2,0],
+    [0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,0,0,0,0,1,0,0],
+    [0,2,0,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0],
+    [0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0],
+    [0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,2,1,1,1,0,1,1,1,1,0],
+    [0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0],
+    [0,1,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,1,1,1,1,0,1,0],
+    [0,0,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1,0,1,0],
+    [0,1,1,1,0,1,1,1,1,1,0,1,0,1,1,1,0,1,1,1,0,1,0,1,1,1,1,2,1,0],
+    [0,1,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,0,0,0],
+    [0,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0],
+    [0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,1,0,0,1,0],
+    [0,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,0,2,1,0],
+    [0,0,0,0,0,1,0,1,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
+    [0,2,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,0],
+    [0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,0,0,1,0,1,0,1,0,0,0,0,0,0],
+    [0,1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,1,0],
+    [0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,0],
+    [0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,1,2,1,0],
+    [0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0],
+    [0,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,0,1,0,1,1,1,1,0],
+    [0,0,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,1,0],
+    [0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,1,0,2,1,0],
+    [0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0],
+    [0,1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+    [0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+    [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+    [0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+];
+
+const itemData = [
+    {
+        title: "Memory Fragment 1",
+        image: "assets/item1.png",
+        text: "First memory from our journey together..."
+    },
+    {
+        title: "Memory Fragment 2",
+        image: "assets/item2.png",
+        text: "Second memory from our journey together..."
+    },
+    {
+        title: "Memory Fragment 3",
+        image: "assets/item3.png",
+        text: "Third memory from our journey together..."
+    },
+    {
+        title: "Memory Fragment 4",
+        image: "assets/item4.png",
+        text: "Fourth memory from our journey together..."
+    },
+    {
+        title: "Memory Fragment 5",
+        image: "assets/item5.png",
+        text: "Fifth memory from our journey together..."
+    },
+    {
+        title: "Memory Fragment 6",
+        image: "assets/item6.png",
+        text: "Sixth memory from our journey together..."
+    },
+    {
+        title: "Memory Fragment 7",
+        image: "assets/item7.png",
+        text: "Seventh memory from our journey together..."
+    },
+    {
+        title: "Memory Fragment 8",
+        image: "assets/item8.png",
+        text: "Final memory before the end..."
+    }
+];
+let collectedItems = 0;
+let isItemDialogOpen = false;
+        createCorridor();
+        createMemoryObjects();
+        createTextMessageObjects();
+        createPoemPapers(); 
+        createFinalImage();
+        createFinalMessage();
+
+        // Create floating texts at start
+        createFloatingText('Hello, darling!\nUse WASD + Mouse to explore', [0, 2.5, 2]);
+
+        // Mouse controls
+        document.addEventListener('click', () => {
+            if (!isPointerLocked) {
+                renderer.domElement.requestPointerLock();
+            }
+        });
+
+        document.addEventListener('pointerlockchange', () => {
+            isPointerLocked = document.pointerLockElement === renderer.domElement;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isPointerLocked) {
+                mouseX -= e.movementX * 0.002;
+                mouseY -= e.movementY * 0.002;
+                mouseY = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, mouseY));
+            }
+        });
+
+document.addEventListener('keydown', (e) => {
+    if (isLabyrinthOpen) {
+        if (isItemDialogOpen) {
+            if (e.key === ' ') {
+                closeItemDialog();
+            }
+        } else {
+            labyrinthKeys[e.key.toLowerCase()] = true;
+            if (e.key.toLowerCase() === 'escape') {
+                closeLabyrinth();
+            }
+        }
+    } else {
+        keys[e.key.toLowerCase()] = true;
+        if (e.key.toLowerCase() === 'e' && currentMemory) {
+            closeMemory();
+        }
+    }
+});
+
+document.addEventListener('keyup', (e) => {
+    if (isLabyrinthOpen) {
+        labyrinthKeys[e.key.toLowerCase()] = false;
+    } else {
+        keys[e.key.toLowerCase()] = false;
+    }
+});
+
+// Check proximity to memory objects and text messages
+function checkMemoryProximity() {
+    let nearestMemory = null;
+    let minDistance = Infinity;
+
+    memoryObjects.forEach(obj => {
+        const distance = camera.position.distanceTo(obj.position);
+        if (distance < 2 && distance < minDistance) {
+            minDistance = distance;
+            nearestMemory = obj;
+        }
+    });
+    // Check final image
+    if (finalImageObject) {
+        const distance = camera.position.distanceTo(finalImageObject.position);
+        if (distance < 2 && distance < minDistance) {
+            minDistance = distance;
+            nearestMemory = finalImageObject;
+        }
+    }
+
+    if (nearestMemory && !currentMemory) {
+        document.getElementById('interactPrompt').style.display = 'block';
+        if (keys['e']) {
+            openMemory(nearestMemory.userData);
+        }
+    } else {
+        document.getElementById('interactPrompt').style.display = 'none';
+    }
+    
+    // Fade in/out text messages based on proximity
+    textMessageObjects.forEach(textObj => {
+        const distance = camera.position.distanceTo(textObj.position);
+        const fadeDistance = 8; // Distance at which text starts appearing
+        
+        if (distance < fadeDistance) {
+            const opacity = 1 - (distance / fadeDistance);
+            textObj.material.opacity = Math.max(0, Math.min(1, opacity));
+        } else {
+            textObj.material.opacity = 0;
+        }
+    });
+
+    // Fade in/out poem papers based on proximity
+    poemPaperObjects.forEach(poemObj => {
+        const distance = camera.position.distanceTo(poemObj.position);
+        const fadeDistance = 8;
+        
+        if (distance < fadeDistance) {
+            const opacity = 1 - (distance / fadeDistance);
+            poemObj.material.opacity = Math.max(0, Math.min(1, opacity));
+        } else {
+            poemObj.material.opacity = 0;
+        }
+    });
+    // Fade in/out final message based on proximity
+    if (finalMessageObject) {
+        const distance = camera.position.distanceTo(finalMessageObject.position);
+        const fadeDistance = 8;
+        
+        if (distance < fadeDistance) {
+            const opacity = 1 - (distance / fadeDistance);
+            finalMessageObject.material.opacity = Math.max(0, Math.min(1, opacity));
+        } else {
+            finalMessageObject.material.opacity = 0;
+        }
+    }
+    // Fade in/out memory images based on proximity
+    memoryObjects.forEach(memObj => {
+        const distance = camera.position.distanceTo(memObj.position);
+        const fadeDistance = 8;
+        
+        if (distance < fadeDistance) {
+            const opacity = 1 - (distance / fadeDistance);
+            memObj.material.opacity = Math.max(0, Math.min(1, opacity));
+        } else {
+            memObj.material.opacity = 0;
+        }
+    });
+
+    // Fade in/out final image based on proximity
+    if (finalImageObject) {
+        const distance = camera.position.distanceTo(finalImageObject.position);
+        const fadeDistance = 8;
+        
+        if (distance < fadeDistance) {
+            const opacity = 1 - (distance / fadeDistance);
+            finalImageObject.material.opacity = Math.max(0, Math.min(1, opacity));
+        } else {
+            finalImageObject.material.opacity = 0;
+        }
+    }
+}
+        // Check if player passed floating texts
+        function checkFloatingTexts() {
+            floatingTexts.forEach((text, index) => {
+                if (camera.position.z < text.position.z - 2) {
+                    scene.remove(text);
+                    floatingTexts.splice(index, 1);
+                }
+            });
+        }
+
+function openMemory(data) {
+    // Check if this is the final image
+    if (data.index === 'final') {
+        openLabyrinth();
+        return;
+    }
+    
+    currentMemory = data;
+    document.getElementById('memoryTitle').textContent = data.name;
+    document.getElementById('memoryText').textContent = data.content;
+    document.getElementById('memoryDialog').style.display = 'block';
+    keys['e'] = false;
+}
+
+        function closeMemory() {
+            document.getElementById('memoryDialog').style.display = 'none';
+            currentMemory = null;
+            keys['e'] = false;
+        }
+
+function openLabyrinth() {
+    isLabyrinthOpen = true;
+    document.getElementById('labyrinthGame').style.display = 'block';
+    
+    labyrinthCanvas = document.getElementById('labyrinthCanvas');
+    labyrinthCanvas.width = 1200;  // Increased from 800
+    labyrinthCanvas.height = 900;  // Increased from 600
+    labyrinthCtx = labyrinthCanvas.getContext('2d');
+    
+    // Reset player position and collected items
+    playerPos = { x: 1, y: 1 };
+    collectedItems = 0;
+    
+    // Reset all maze items (8 items marked as 2 in the maze)
+    const itemPositions = [[1,28], [3,1], [5,20], [9,27], [13,27], [15,1], [19,27], [23,27]];
+    itemPositions.forEach(([y, x]) => {
+        labyrinthMaze[y][x] = 2;
+    });
+    
+    drawLabyrinth();
+}
+
+function closeLabyrinth() {
+    isLabyrinthOpen = false;
+    document.getElementById('labyrinthGame').style.display = 'none';
+}
+function showItemDialog(itemIndex) {
+    if (itemIndex >= itemData.length) return;
+    
+    isItemDialogOpen = true;
+    const item = itemData[itemIndex];
+    
+    document.getElementById('itemTitle').textContent = item.title;
+    document.getElementById('itemText').textContent = item.text;
+    
+    const imgElement = document.getElementById('itemImage');
+    imgElement.src = item.image;
+    imgElement.style.display = 'block';
+    imgElement.onerror = function() {
+        this.style.display = 'none';
+    };
+    
+    document.getElementById('itemDialog').style.display = 'block';
+}
+
+function closeItemDialog() {
+    isItemDialogOpen = false;
+    document.getElementById('itemDialog').style.display = 'none';
+}
+
+function drawLabyrinth() {
+    if (!labyrinthCtx) return;
+    
+    labyrinthCtx.fillStyle = '#000';
+    labyrinthCtx.fillRect(0, 0, labyrinthCanvas.width, labyrinthCanvas.height);
+    
+    // Center the maze
+    const offsetX = (labyrinthCanvas.width - labyrinthMaze[0].length * cellSize) / 2;
+    const offsetY = (labyrinthCanvas.height - labyrinthMaze.length * cellSize) / 2;
+    
+    // Draw maze
+    for (let y = 0; y < labyrinthMaze.length; y++) {
+        for (let x = 0; x < labyrinthMaze[y].length; x++) {
+            const px = offsetX + x * cellSize;
+            const py = offsetY + y * cellSize;
+            
+            if (labyrinthMaze[y][x] === 0) {
+                // Wall - dark green
+                labyrinthCtx.fillStyle = '#1a4d2e';
+                labyrinthCtx.fillRect(px, py, cellSize, cellSize);
+                labyrinthCtx.strokeStyle = '#0d2818';
+                labyrinthCtx.strokeRect(px, py, cellSize, cellSize);
+            } else if (labyrinthMaze[y][x] === 1) {
+                // Path - light green
+                labyrinthCtx.fillStyle = '#4f7942';
+                labyrinthCtx.fillRect(px, py, cellSize, cellSize);
+            } else if (labyrinthMaze[y][x] === 2) {
+                // Placeholder item - yellow
+                labyrinthCtx.fillStyle = '#4f7942';
+                labyrinthCtx.fillRect(px, py, cellSize, cellSize);
+                labyrinthCtx.fillStyle = '#d4af37';
+                labyrinthCtx.beginPath();
+                labyrinthCtx.arc(px + cellSize/2, py + cellSize/2, cellSize/4, 0, Math.PI * 2);
+                labyrinthCtx.fill();
+            } else if (labyrinthMaze[y][x] === 3) {
+                // End point - glowing green
+                labyrinthCtx.fillStyle = '#4f7942';
+                labyrinthCtx.fillRect(px, py, cellSize, cellSize);
+                labyrinthCtx.fillStyle = '#00ff00';
+                labyrinthCtx.beginPath();
+                labyrinthCtx.arc(px + cellSize/2, py + cellSize/2, cellSize/3, 0, Math.PI * 2);
+                labyrinthCtx.fill();
+                // Add glow effect
+                labyrinthCtx.strokeStyle = '#90ff90';
+                labyrinthCtx.lineWidth = 3;
+                labyrinthCtx.stroke();
+            }
+        }
+    }
+    
+    // Draw player - red circle
+    const playerX = offsetX + playerPos.x * cellSize + cellSize / 2;
+    const playerY = offsetY + playerPos.y * cellSize + cellSize / 2;
+    labyrinthCtx.fillStyle = '#ff4444';
+    labyrinthCtx.beginPath();
+    labyrinthCtx.arc(playerX, playerY, cellSize / 3, 0, Math.PI * 2);
+    labyrinthCtx.fill();
+}
+
+function updateLabyrinth() {
+    if (!isLabyrinthOpen || isItemDialogOpen) return;
+    
+    let moved = false;
+    let newX = playerPos.x;
+    let newY = playerPos.y;
+    
+    if (labyrinthKeys['w'] || labyrinthKeys['arrowup']) {
+        newY--;
+        moved = true;
+    } else if (labyrinthKeys['s'] || labyrinthKeys['arrowdown']) {
+        newY++;
+        moved = true;
+    } else if (labyrinthKeys['a'] || labyrinthKeys['arrowleft']) {
+        newX--;
+        moved = true;
+    } else if (labyrinthKeys['d'] || labyrinthKeys['arrowright']) {
+        newX++;
+        moved = true;
+    }
+    
+    // Check if new position is valid (not a wall)
+    if (moved && labyrinthMaze[newY] && labyrinthMaze[newY][newX] !== 0) {
+        const currentTime = Date.now();
+        if (currentTime - lastMoveTime < moveDelay) return; // Cooldown check
+        
+        playerPos.x = newX;
+        playerPos.y = newY;
+        lastMoveTime = currentTime;
+        
+        // Check if player collected placeholder item
+        if (labyrinthMaze[newY][newX] === 2) {
+            labyrinthMaze[newY][newX] = 1; // Remove item
+            showItemDialog(collectedItems);
+            collectedItems++;
+            console.log('Collected item ' + collectedItems);
+        }
+        
+        // Check if player reached the end
+        if (labyrinthMaze[newY][newX] === 3) {
+            closeLabyrinth();
+            collectedItems = 0; // Reset for next time
+        }
+        
+        drawLabyrinth();
+    }
+}
+        // Movement
+        function updateMovement() {
+            if (currentMemory) return;
+
+            const forward = new THREE.Vector3(0, 0, -1);
+            const right = new THREE.Vector3(1, 0, 0);
+            
+            forward.applyQuaternion(camera.quaternion);
+            forward.y = 0;
+            forward.normalize();
+            
+            right.applyQuaternion(camera.quaternion);
+            right.y = 0;
+            right.normalize();
+
+            if (keys['w'] || keys['arrowup']) {
+                camera.position.add(forward.multiplyScalar(moveSpeed));
+            }
+            if (keys['s'] || keys['arrowdown']) {
+                camera.position.add(forward.multiplyScalar(-moveSpeed));
+            }
+            if (keys['a'] || keys['arrowleft']) {
+                camera.position.add(right.multiplyScalar(-moveSpeed));
+            }
+            if (keys['d'] || keys['arrowright']) {
+                camera.position.add(right.multiplyScalar(moveSpeed));
+            }
+
+            // Keep player in corridor bounds
+            camera.position.x = Math.max(-2.5, Math.min(2.5, camera.position.x));
+            camera.position.z = Math.max(-165, Math.min(5, camera.position.z));
+            camera.position.y = 1.6;
+
+            // Update light position
+            pointLight.position.copy(camera.position);
+        }
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Update camera rotation
+            camera.rotation.order = 'YXZ';
+            camera.rotation.y = mouseX;
+            camera.rotation.x = mouseY;
+
+            updateMovement();
+            checkMemoryProximity();
+            checkFloatingTexts();
+            updateLabyrinth();
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
 </body>
 </html>
-
-
-
-
-
