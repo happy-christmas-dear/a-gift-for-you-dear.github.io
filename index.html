@@ -93,7 +93,54 @@
     display: none;
     z-index: 300;
 }
+#mobileControls {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;  /* Changed from center to left */
+    transform: none;  /* Remove centering transform */
+    display: none;
+    z-index: 100;
+    gap: 10px;
+}
 
+.mobile-btn {
+    width: 60px;
+    height: 60px;
+    background: rgba(139, 115, 85, 0.7);
+    border: 2px solid #d4af37;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    touch-action: none;
+    user-select: none;
+}
+
+.mobile-btn:active {
+    background: rgba(160, 137, 104, 0.9);
+}
+
+#mobileJoystick {
+    display: grid;
+    grid-template-columns: repeat(3, 60px);
+    grid-template-rows: repeat(3, 60px);
+    gap: 5px;
+}
+
+#touchLookArea {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 50;
+    display: none;
+    pointer-events: none;
+}
+
+#touchLookArea.active {
+    pointer-events: auto;
+}
 #itemDialog {
     position: absolute;
     top: 50%;
@@ -303,16 +350,17 @@
 <body>
 <div id="gameContainer">
     <div id="mobileControls">
-    <div id="mobileJoystick">
-        <div></div>
-        <button class="mobile-btn" data-key="w">↑</button>
-        <div></div>
-        <button class="mobile-btn" data-key="a">←</button>
-        <button class="mobile-btn" data-key="s">↓</button>
-        <button class="mobile-btn" data-key="d">→</button>
-        <div></div>
-        <button class="mobile-btn" data-key="e">E</button>
-        <div></div>
+        <div id="mobileJoystick">
+            <div></div>
+            <button class="mobile-btn" data-key="w">↑</button>
+            <div></div>
+            <button class="mobile-btn" data-key="a">←</button>
+            <button class="mobile-btn" data-key="s">↓</button>
+            <button class="mobile-btn" data-key="d">→</button>
+            <div></div>
+            <button class="mobile-btn" data-key="e">E</button>
+            <div></div>
+        </div>
     </div>
 </div>
     <div id="interactPrompt">Press [E] to interact</div>
@@ -368,6 +416,57 @@ const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/
 
 if (isMobile) {
     document.getElementById('mobileControls').style.display = 'block';
+    document.getElementById('touchLookArea').style.display = 'block';
+    document.getElementById('touchLookArea').classList.add('active');
+}
+
+// Touch look controls for mobile
+if (isMobile) {
+    let lastTouchX = 0;
+    let lastTouchY = 0;
+    
+    const touchArea = document.getElementById('touchLookArea');
+    
+    touchArea.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 0) {
+            lastTouchX = e.touches[0].clientX;
+            lastTouchY = e.touches[0].clientY;
+        }
+    });
+    
+    touchArea.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        if (e.touches.length > 0) {
+            const deltaX = e.touches[0].clientX - lastTouchX;
+            const deltaY = e.touches[0].clientY - lastTouchY;
+            
+            mouseX -= deltaX * 0.005;
+            mouseY -= deltaY * 0.005;
+            mouseY = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, mouseY));
+            
+            lastTouchX = e.touches[0].clientX;
+            lastTouchY = e.touches[0].clientY;
+        }
+    });
+}
+
+// Mobile button controls
+if (isMobile) {
+    document.querySelectorAll('.mobile-btn').forEach(btn => {
+        btn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const key = btn.getAttribute('data-key');
+            keys[key] = true;
+        });
+        
+        btn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const key = btn.getAttribute('data-key');
+            keys[key] = false;
+        });
+    });
 }
         // Player controls
         const moveSpeed = 0.1;
@@ -1417,4 +1516,5 @@ function openLetterPage() {
     </script>
 </body>
 </html>
+
 
