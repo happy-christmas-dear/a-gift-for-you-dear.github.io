@@ -349,6 +349,7 @@
 </head>
 <body>
 <div id="gameContainer">
+    <div id="touchLookArea"></div>
     <div id="mobileControls">
         <div id="mobileJoystick">
             <div></div>
@@ -362,41 +363,39 @@
             <div></div>
         </div>
     </div>
-</div>
     <div id="interactPrompt">Press [E] to interact</div>
     <div id="memoryDialog">
         <h2 id="memoryTitle"></h2>
         <p id="memoryText"></p>
         <button onclick="closeMemory()">Continue (E)</button>
     </div>
-<div id="memoriesPage">
-    <button id="closeMemoriesBtn" onclick="closeMemoriesPage()">Back</button>
-    <div id="memoriesContent">Our Journey
-        <h1>Reminds you of anything?</h1>
+    <div id="memoriesPage">
+        <button id="closeMemoriesBtn" onclick="closeMemoriesPage()">Back</button>
+        <div id="memoriesContent">
+            <h1>Reminds you of anything?</h1>
+        </div>
     </div>
-</div>
 
-<div id="letterPage">
-    <button id="closeLetterBtn" onclick="closeLetterPage()">Back</button>
-    <div id="letterContent">
-        <h1>A Letter for You</h1>
-        <div class="letter-text">
-            <p>Dear Darling,<br>
-I often express, during our conversations, my love and admiration for you. However I rarely talk in detail about why I think so, also, but not only, because you don’t let me. The first reason why I love you is that of why most people like each other (after the physical look, something that both of us agree in not taking in consideration), and that is your personality. It’s clear you are a person especially dedicated to the thought and the mind rather than to the body, which is something you share with me, although not in the same ways. This makes you prone to reflections which make you a person, in my eyes, refreshingly interesting. You are also a very direct and mentally imposing person, which is something I pretty much am too in real life, relative to my culture at least, and that I really admire. At the same time, you also care deeply about your friends and you are very delicate too when needed. Furthermore, you are extremely witty, smart and good in most things you do, so it’s really no wonder I’m not the first person that falls in love with your personality. 
-The second reason why I love you is, again, common to many human relationships: the way you act toward me. I am one of the lucky few who you care about and are nice and amazing towards, and while that doesn’t mean you aren’t harsh to me when needed, it still makes me really enjoy and crave the time I spend with you. Those two reasons are obvious and I started, over time, to take them for granted, which is a mistake, as the way we are and the way we act to each other is the foundation of us (and a very strong one!), and they should be remembered. Related to, but not the same as, the past reason is the fact you are, if not always, very often there for me, which is something I really need and enjoy from someone like you, being the lonely individual I am. This not only makes me closer to you and like you more as you are a rock for me, but also brings our relationship from a normal one of two people liking each other in how they are and behave to something deeper, as we both trust and rely on each other and are mostly there when the other needs. This brings me a sense of security, which is something I really value, also due to my past experiences: you make me feel safe with you and this makes me love and trust you completely. 
-Changing topic, another reason I love you is your ideals. While I would obviously not mind you or any other of my friend (the absence of “s” is intentional) having a different political or religious opinion than mine, it’s impossible to avoid that the fact we have makes us closer and allows us to understand each other better. At the same time we also have our differences, and this makes us even better and stronger, as we wouldn’t be able to otherwise grow from this relationship and we’d just be copies of each other. 
+    <div id="letterPage">
+        <button id="closeLetterBtn" onclick="closeLetterPage()">Back</button>
+        <div id="letterContent">
+            <h1>A Letter for You</h1>
+            <div class="letter-text">
+                <p>Dear Darling,<br>
+I often express, during our conversations, my love and admiration for you. However I rarely talk in detail about why I think so, also, but not only, because you don't let me. The first reason why I love you is that of why most people like each other (after the physical look, something that both of us agree in not taking in consideration), and that is your personality. It's clear you are a person especially dedicated to the thought and the mind rather than to the body, which is something you share with me, although not in the same ways. This makes you prone to reflections which make you a person, in my eyes, refreshingly interesting. You are also a very direct and mentally imposing person, which is something I pretty much am too in real life, relative to my culture at least, and that I really admire. At the same time, you also care deeply about your friends and you are very delicate too when needed. Furthermore, you are extremely witty, smart and good in most things you do, so it's really no wonder I'm not the first person that falls in love with your personality. 
+The second reason why I love you is, again, common to many human relationships: the way you act toward me. I am one of the lucky few who you care about and are nice and amazing towards, and while that doesn't mean you aren't harsh to me when needed, it still makes me really enjoy and crave the time I spend with you. Those two reasons are obvious and I started, over time, to take them for granted, which is a mistake, as the way we are and the way we act to each other is the foundation of us (and a very strong one!), and they should be remembered. Related to, but not the same as, the past reason is the fact you are, if not always, very often there for me, which is something I really need and enjoy from someone like you, being the lonely individual I am. This not only makes me closer to you and like you more as you are a rock for me, but also brings our relationship from a normal one of two people liking each other in how they are and behave to something deeper, as we both trust and rely on each other and are mostly there when the other needs. This brings me a sense of security, which is something I really value, also due to my past experiences: you make me feel safe with you and this makes me love and trust you completely. 
+Changing topic, another reason I love you is your ideals. While I would obviously not mind you or any other of my friend (the absence of "s" is intentional) having a different political or religious opinion than mine, it's impossible to avoid that the fact we have makes us closer and allows us to understand each other better. At the same time we also have our differences, and this makes us even better and stronger, as we wouldn't be able to otherwise grow from this relationship and we'd just be copies of each other. 
 Those are the most important reasons why I love you. There are many others, but I want to keep this letter short and my thoughts clear and concise.
 <br><br>
 Thank you for everything, I love you
 James </p>
+            </div>
         </div>
     </div>
 </div>
-</div>
-</div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
         
         // Scene setup
         const scene = new THREE.Scene();
@@ -411,63 +410,6 @@ James </p>
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         document.getElementById('gameContainer').appendChild(renderer.domElement);
-// Mobile detection
-const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-if (isMobile) {
-    document.getElementById('mobileControls').style.display = 'block';
-    document.getElementById('touchLookArea').style.display = 'block';
-    document.getElementById('touchLookArea').classList.add('active');
-}
-
-// Touch look controls for mobile
-if (isMobile) {
-    let lastTouchX = 0;
-    let lastTouchY = 0;
-    
-    const touchArea = document.getElementById('touchLookArea');
-    
-    touchArea.addEventListener('touchstart', (e) => {
-        if (e.touches.length > 0) {
-            lastTouchX = e.touches[0].clientX;
-            lastTouchY = e.touches[0].clientY;
-        }
-    });
-    
-    touchArea.addEventListener('touchmove', (e) => {
-        e.preventDefault();
-        if (e.touches.length > 0) {
-            const deltaX = e.touches[0].clientX - lastTouchX;
-            const deltaY = e.touches[0].clientY - lastTouchY;
-            
-            mouseX -= deltaX * 0.005;
-            mouseY -= deltaY * 0.005;
-            mouseY = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, mouseY));
-            
-            lastTouchX = e.touches[0].clientX;
-            lastTouchY = e.touches[0].clientY;
-        }
-    });
-}
-
-// Mobile button controls
-if (isMobile) {
-    document.querySelectorAll('.mobile-btn').forEach(btn => {
-        btn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const key = btn.getAttribute('data-key');
-            keys[key] = true;
-        });
-        
-        btn.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const key = btn.getAttribute('data-key');
-            keys[key] = false;
-        });
-    });
-}
         // Player controls
         const moveSpeed = 0.1;
         const keys = {};
@@ -1122,6 +1064,65 @@ let isItemDialogOpen = false;
         // Create floating texts at start
         createFloatingText('Hello, darling!\nUse WASD + Mouse to explore', [0, 2.5, 2]);
 
+        // Mobile detection and controls - ADD THIS SECTION HERE
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+        if (isMobile) {
+            document.getElementById('mobileControls').style.display = 'block';
+            document.getElementById('touchLookArea').style.display = 'block';
+            document.getElementById('touchLookArea').classList.add('active');
+            
+            // Touch look controls
+            let lastTouchX = 0;
+            let lastTouchY = 0;
+            
+            const touchArea = document.getElementById('touchLookArea');
+            
+            touchArea.addEventListener('touchstart', (e) => {
+                if (e.touches.length > 0) {
+                    lastTouchX = e.touches[0].clientX;
+                    lastTouchY = e.touches[0].clientY;
+                }
+            });
+            
+            touchArea.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                if (e.touches.length > 0) {
+                    const deltaX = e.touches[0].clientX - lastTouchX;
+                    const deltaY = e.touches[0].clientY - lastTouchY;
+                    
+                    mouseX -= deltaX * 0.005;
+                    mouseY -= deltaY * 0.005;
+                    mouseY = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, mouseY));
+                    
+                    lastTouchX = e.touches[0].clientX;
+                    lastTouchY = e.touches[0].clientY;
+                }
+            });
+            
+            // Mobile button controls
+            document.querySelectorAll('.mobile-btn').forEach(btn => {
+                btn.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const key = btn.getAttribute('data-key');
+                    keys[key] = true;
+                });
+                
+                btn.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const key = btn.getAttribute('data-key');
+                    keys[key] = false;
+                });
+            });
+        }
+
+        // Mouse controls (existing code continues here)
+        document.addEventListener('click', () => {
+
+    
+
         // Mouse controls
         document.addEventListener('click', () => {
             if (!isPointerLocked) {
@@ -1166,23 +1167,7 @@ document.addEventListener('keyup', (e) => {
         keys[e.key.toLowerCase()] = false;
     }
 });
-// Mobile button controls
-if (isMobile) {
-    document.querySelectorAll('.mobile-btn').forEach(btn => {
-        btn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            const key = btn.getAttribute('data-key');
-            keys[key] = true;
-        });
-        
-        btn.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            const key = btn.getAttribute('data-key');
-            keys[key] = false;
-        });
-    });
-}
-// Check proximity to memory objects and text messages
+
 // Check proximity to memory objects and text messages
 function checkMemoryProximity() {
     let nearestMemory = null;
@@ -1516,5 +1501,6 @@ function openLetterPage() {
     </script>
 </body>
 </html>
+
 
 
